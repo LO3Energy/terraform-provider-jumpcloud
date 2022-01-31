@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourceGroup() *schema.Resource {
+func dataSourceUserGroup() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use this data source to get information about a JumpCloud System User.",
 		ReadContext: dataSourceGroupRead,
