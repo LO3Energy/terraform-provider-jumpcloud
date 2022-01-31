@@ -107,18 +107,24 @@ func dataSourceUserRead(_ context.Context, d *schema.ResourceData, meta interfac
 			return diag.FromErr(err)
 		}
 
-		d.SetId(res.Results[0].Id)
+		if len(res.Results) <= 0 {
+			return diag.Errorf(email + " email not found!")
+		}
 
-		if err := d.Set("username", res.Results[0].Username); err != nil {
+		result := res.Results[0]
+
+		d.SetId(result.Id)
+
+		if err := d.Set("username", result.Username); err != nil {
 			return diag.FromErr(err)
 		}
-		if err := d.Set("email", res.Results[0].Email); err != nil {
+		if err := d.Set("email", result.Email); err != nil {
 			return diag.FromErr(err)
 		}
-		if err := d.Set("firstname", res.Results[0].Firstname); err != nil {
+		if err := d.Set("firstname", result.Firstname); err != nil {
 			return diag.FromErr(err)
 		}
-		if err := d.Set("lastname", res.Results[0].Lastname); err != nil {
+		if err := d.Set("lastname", result.Lastname); err != nil {
 			return diag.FromErr(err)
 		}
 
@@ -143,18 +149,24 @@ func dataSourceUserRead(_ context.Context, d *schema.ResourceData, meta interfac
 			return diag.FromErr(err)
 		}
 
-		d.SetId(res.Results[0].Id)
+		if len(res.Results) <= 0 {
+			return diag.Errorf(username + " username not found!")
+		}
 
-		if err := d.Set("username", res.Results[0].Username); err != nil {
+		result := res.Results[0]
+
+		d.SetId(result.Id)
+
+		if err := d.Set("username", result.Username); err != nil {
 			return diag.FromErr(err)
 		}
-		if err := d.Set("email", res.Results[0].Email); err != nil {
+		if err := d.Set("email", result.Email); err != nil {
 			return diag.FromErr(err)
 		}
-		if err := d.Set("firstname", res.Results[0].Firstname); err != nil {
+		if err := d.Set("firstname", result.Firstname); err != nil {
 			return diag.FromErr(err)
 		}
-		if err := d.Set("lastname", res.Results[0].Lastname); err != nil {
+		if err := d.Set("lastname", result.Lastname); err != nil {
 			return diag.FromErr(err)
 		}
 
