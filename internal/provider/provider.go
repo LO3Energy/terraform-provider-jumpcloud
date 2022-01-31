@@ -30,6 +30,7 @@ func New(version string) func() *schema.Provider {
 				"jumpcloud_gsuite_directory":    dataSourceJumpCloudGSuiteDirectory(),
 				"jumpcloud_ldap_directory":      dataSourceJumpCloudLDAPDirectory(),
 				"jumpcloud_office365_directory": dataSourceJumpCloudOffice365Directory(),
+				"jumpcloud_user" :               dataSourceUser(),
 			},
 			ResourcesMap: map[string]*schema.Resource{
 				"jumpcloud_application":            resourceApplication(),
