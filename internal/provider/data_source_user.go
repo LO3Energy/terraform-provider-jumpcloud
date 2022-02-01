@@ -53,127 +53,80 @@ func dataSourceUserRead(_ context.Context, d *schema.ResourceData, meta interfac
 	usernameData, usernameOk := d.GetOk("username")
 	emailData, emailOk := d.GetOk("email")
 
-	if userIDOk {
+	var result jcapiv1.Systemuserreturn
+	var err error
 
+	if userIDOk {
+		
 		userID := userIDData.(string)
 
-		res, _, err := client.SystemusersApi.SystemusersGet(context.TODO(),
+		res, _, errr := client.SystemusersApi.SystemusersGet(context.TODO(),
 			userID, "", "", nil)
 
-		// If the object does not exist in our infrastructure, we unset the ID
-		// Unfortunately, the http request returns 200 even if the resource does not exist
-		if err != nil {
-			if err.Error() == "EOF" {
-				d.SetId("")
-				return nil
-			}
-			return diag.FromErr(err)
-		}
-
-		d.SetId(res.Id)
-
-		if err := d.Set("username", res.Username); err != nil {
-			return diag.FromErr(err)
-		}
-		if err := d.Set("email", res.Email); err != nil {
-			return diag.FromErr(err)
-		}
-		if err := d.Set("firstname", res.Firstname); err != nil {
-			return diag.FromErr(err)
-		}
-		if err := d.Set("lastname", res.Lastname); err != nil {
-			return diag.FromErr(err)
-		}
-
-		// indicates that everything went well
-		return nil
+		result = res
+		err = errr
 
 	} else if emailOk {
-
+		
 		email := emailData.(string)
 
-		res, _, err := client.SystemusersApi.SystemusersList(context.TODO(),
+		res, _, errr := client.SystemusersApi.SystemusersList(context.TODO(),
 			"", "", map[string]interface{}{
 				"filter": "email:$eq:" + email,
 			})
-
-		// If the object does not exist in our infrastructure, we unset the ID
-		// Unfortunately, the http request returns 200 even if the resource does not exist
-		if err != nil {
-			if err.Error() == "EOF" {
-				d.SetId("")
-				return nil
-			}
-			return diag.FromErr(err)
-		}
 
 		if len(res.Results) <= 0 {
 			return diag.Errorf(email + " email not found!")
 		}
 
-		result := res.Results[0]
-
-		d.SetId(result.Id)
-
-		if err := d.Set("username", result.Username); err != nil {
-			return diag.FromErr(err)
-		}
-		if err := d.Set("email", result.Email); err != nil {
-			return diag.FromErr(err)
-		}
-		if err := d.Set("firstname", result.Firstname); err != nil {
-			return diag.FromErr(err)
-		}
-		if err := d.Set("lastname", result.Lastname); err != nil {
-			return diag.FromErr(err)
-		}
-
-		// indicates that everything went well
-		return nil
+		result = res.Results[0]
+		err = errr
 
 	} else if usernameOk {
 		username := usernameData.(string)
 
-		res, _, err := client.SystemusersApi.SystemusersList(context.TODO(),
+		res, _, errr := client.SystemusersApi.SystemusersList(context.TODO(),
 			"", "", map[string]interface{}{
 				"filter": "username:$eq:" + username,
 			})
-
-		// If the object does not exist in our infrastructure, we unset the ID
-		// Unfortunately, the http request returns 200 even if the resource does not exist
-		if err != nil {
-			if err.Error() == "EOF" {
-				d.SetId("")
-				return nil
-			}
-			return diag.FromErr(err)
-		}
 
 		if len(res.Results) <= 0 {
 			return diag.Errorf(username + " username not found!")
 		}
 
-		result := res.Results[0]
+		result = res.Results[0]
+		err = errr
 
-		d.SetId(result.Id)
-
-		if err := d.Set("username", result.Username); err != nil {
-			return diag.FromErr(err)
-		}
-		if err := d.Set("email", result.Email); err != nil {
-			return diag.FromErr(err)
-		}
-		if err := d.Set("firstname", result.Firstname); err != nil {
-			return diag.FromErr(err)
-		}
-		if err := d.Set("lastname", result.Lastname); err != nil {
-			return diag.FromErr(err)
-		}
-
-		// indicates that everything went well
-		return nil
 	} else {
 		return diag.Errorf("one of the following must be set: id, username, email")
 	}
+
+	// If the object does not exist in our infrastructure, we unset the ID
+	// Unfortunately, the http request returns 200 even if the resource does not exist
+	if err != nil {
+		if err.Error() == "EOF" {
+			d.SetId("")
+			return nil
+		}
+		return diag.FromErr(err)
+	}
+
+	d.SetId(result.Id)
+
+	if err := d.Set("username", result.Username); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("email", result.Email); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("firstname", result.Firstname); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("lastname", result.Lastname); err != nil {
+		return diag.FromErr(err)
+	}
+
+	// indicates that everything went well
+	return nil
 
 }
