@@ -57,7 +57,6 @@ func dataSourceUserRead(_ context.Context, d *schema.ResourceData, meta interfac
 	var err error
 
 	if userIDOk {
-		
 		userID := userIDData.(string)
 
 		res, _, errr := client.SystemusersApi.SystemusersGet(context.TODO(),
@@ -65,9 +64,7 @@ func dataSourceUserRead(_ context.Context, d *schema.ResourceData, meta interfac
 
 		result = res
 		err = errr
-
 	} else if emailOk {
-		
 		email := emailData.(string)
 
 		res, _, errr := client.SystemusersApi.SystemusersList(context.TODO(),
@@ -76,12 +73,11 @@ func dataSourceUserRead(_ context.Context, d *schema.ResourceData, meta interfac
 			})
 
 		if len(res.Results) <= 0 {
-			return diag.Errorf(email + " email not found!")
+			return diag.Errorf(email + " Email not found!")
 		}
 
 		result = res.Results[0]
 		err = errr
-
 	} else if usernameOk {
 		username := usernameData.(string)
 
@@ -91,12 +87,11 @@ func dataSourceUserRead(_ context.Context, d *schema.ResourceData, meta interfac
 			})
 
 		if len(res.Results) <= 0 {
-			return diag.Errorf(username + " username not found!")
+			return diag.Errorf(username + " Username not found!")
 		}
 
 		result = res.Results[0]
 		err = errr
-
 	} else {
 		return diag.Errorf("one of the following must be set: id, username, email")
 	}

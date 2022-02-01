@@ -40,63 +40,54 @@ func dataSourceGroupRead(_ context.Context, d *schema.ResourceData, meta interfa
 	groupIdData, groupIdOk := d.GetOk("id")
 	groupNameData, groupNameOk := d.GetOk("name")
 
+	var group *UserGroup
+	var err error
+
 	if groupIdOk {
 		groupId := groupIdData.(string)
 
-		group, ok, err := userGroupReadHelper(config, groupId)
-
-		if err != nil {
-			return diag.FromErr(err)
-		}
+		gr, ok, errr := userGroupReadHelper(config, groupId)
 
 		if !ok {
 			// not found
 			d.SetId("")
-			return nil
+			return diag.Errorf(groupId + " Group ID not found!")
 		}
 
-		d.SetId(group.ID)
-		if err := d.Set("name", group.Name); err != nil {
-			return diag.FromErr(err)
-		}
-		if err := d.Set("type", group.Type); err != nil {
-			return diag.FromErr(err)
-		}
-
-		return nil
+		group = gr
+		err = errr
 	} else if groupNameOk {
-
 		groupName := groupNameData.(string)
 
-		group, ok, err := GroupReadHelperName(config, groupName)
-		if err != nil {
-			return diag.FromErr(err)
-		}
-		if len(group) <= 0 {
-			return diag.Errorf(groupName + " group name not found!")
+		gr, ok, errr := GroupReadHelperName(config, groupName)
+		if len(gr) <= 0 {
+			return diag.Errorf(groupName + " Group name not found!")
 		}
 
 		if !ok {
 			// not found
 			d.SetId("")
-			return nil
+			return diag.Errorf(groupName + " Group name not found!")
 		}
-
-		gr := group[0]
-
-		d.SetId(gr.ID)
-		if err := d.Set("name", gr.Name); err != nil {
-			return diag.FromErr(err)
-		}
-		if err := d.Set("type", gr.Type); err != nil {
-			return diag.FromErr(err)
-		}
-
-		return nil
+		group = gr[0]
+		err = errr
 	} else {
 		return diag.Errorf("one of the following must be set: id, name")
 	}
 
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	d.SetId(group.ID)
+	if err := d.Set("name", group.Name); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("type", group.Type); err != nil {
+		return diag.FromErr(err)
+	}
+
+	return nil
 }
 
 func GroupReadHelperName(config *jcapiv2.Configuration, name string) (ug []*UserGroup,
