@@ -12,21 +12,18 @@ Provides a resource for managing user group memberships.
 ## Example Usage
 
 ```terraform
-resource "jumpcloud_user_group" "example" {
+data "jumpcloud_user_group" "example" {
   name = "My User Group"
 }
 
-resource "jumpcloud_user" "john_doe" {
-  username   = "john.doe"
+data "jumpcloud_user" "john_doe" {
   email      = "john.doe@acme.org"
-  firstname  = "John Smith"
-  lastname   = "Doe"
-  enable_mfa = true
 }
 
+
 resource "jumpcloud_user_group_membership" "example" {
-  user_id  = jumpcloud_user.john_doe.id
-  group_id = jumpcloud_user_group.example.id
+  user_id  = data.jumpcloud_user.john_doe.id
+  group_id = data.jumpcloud_user_group.example.id
 }
 ```
 
