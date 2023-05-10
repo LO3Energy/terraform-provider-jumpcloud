@@ -7,6 +7,8 @@
 
 The JumpCloud provider provides resources to interact with the JumpCloud API v1 and v2. 
 
+This provider was forked from [https://github.com/sagewave/terraform-provider-jumpcloud](https://github.com/sagewave/terraform-provider-jumpcloud), somehow a year later when I needed to use it the organization name changed and my changes got deleted during a force push. Right now I do not have the time and resource to re-factor to current version and re-create the PR, so I'm just going to publish this fork for now and according to the license I should disclose the source which I am doing right here.
+
 ## Usage
 
 The provider is published to the Terraform registry and can be used in the same way as any other provider. For detailed documentation with usage examples [view the generated docs in the Terraform registry](https://registry.terraform.io/providers/sagewave/jumpcloud/latest/docs).
