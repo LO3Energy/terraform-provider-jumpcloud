@@ -1,4 +1,4 @@
-module github.com/sagewave/terraform-provider-jumpcloud
+module github.com/vincenttjia/terraform-provider-jumpcloud
 
 go 1.17
 

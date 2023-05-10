@@ -19,7 +19,7 @@ This provider is still under development. Feel free to open an issue or contribu
 terraform {
   required_providers {
     jumpcloud = {
-      source = "sagewave/jumpcloud"
+      source = "vincenttjia/jumpcloud"
     }
   }
 }
